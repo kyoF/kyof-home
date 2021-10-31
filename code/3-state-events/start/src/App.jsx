@@ -19,13 +19,20 @@ function App() {
     ],
   };
 
-  const [recipe, setResipe] = useState(initialRecipe);
+  const [recipe, setRecipe] = useState(initialRecipe);
 
-  // TODO: Add new state property
+  const [prepared, setPrepared] = useState(false);
 
-  // TODO: Create ingredientClick event listener
+  function ingredientClick(index) {
+    const updatedRecipe = { ...recipe };
+    updatedRecipe.ingredients[index].prepared =
+      !updatedRecipe.ingredients[index].prepared;
+    setRecipe(updatedRecipe);
+  }
 
-  // TODO: Add the effect hook
+  useEffect(() => {
+    setPrepared(recipe.ingredients.every((i) => i.prepared));
+  }, [recipe]);
 
   return (
     <article>
@@ -33,9 +40,11 @@ function App() {
 
       <RecipeTitle title={recipe.title} feedback={recipe.feedback} />
 
-      {/* TODO: Pass ingredients and event listener to IngredientList */}
-
-      {/* TODO: Add the prep work display */}
+      <IngredientList
+        ingredients={recipe.ingredients}
+        onClick={ingredientClick}
+      />
+      {prepared ? <h2>Prep work done!</h2> : <h2>Just keep chopping.</h2>}
     </article>
   );
 }
