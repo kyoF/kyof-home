@@ -1,10 +1,11 @@
 import React from "react";
 import { Editor, EditorState, RichUtils, DraftEditorCommand } from "draft-js";
 import "draft-js/dist/Draft.css";
+import { linkDecorator } from "./Link";
 
 function RichTextEditor() {
   const [editorState, setEditorState] = React.useState<EditorState>(
-    EditorState.createEmpty()
+    EditorState.createEmpty(linkDecorator)
   );
   const handleKeyCommand = (command: DraftEditorCommand) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -21,6 +22,25 @@ function RichTextEditor() {
   const handleBlockClick = (e: React.MouseEvent, blockType: string) => {
     e.preventDefault();
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
+  };
+  const handleAddLink = () => {
+    const selection = editorState.getSelection();
+    const link = prompt("Please enter the URL of your link");
+    if (!link) {
+      setEditorState(RichUtils.toggleLink(editorState, selection, null));
+      return;
+    }
+    const content = editorState.getCurrentContent();
+    const contentWithEntity = content.createEntity("LINK", "MUTABLE", {
+      url: link,
+    });
+    const newEditorState = EditorState.push(
+      editorState,
+      contentWithEntity,
+      "apply-entity"
+    );
+    const entityKey = contentWithEntity.getLastCreatedEntityKey();
+    setEditorState(RichUtils.toggleLink(newEditorState, selection, entityKey));
   };
 
   return (
@@ -52,6 +72,15 @@ function RichTextEditor() {
         placeholder="test"
         handleKeyCommand={handleKeyCommand}
       />
+      <button
+        disabled={editorState.getSelection().isCollapsed()}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          handleAddLink();
+        }}
+      >
+        link
+      </button>
       <button
         disabled={editorState.getUndoStack().size <= 0}
         onMouseDown={() => setEditorState(EditorState.undo(editorState))}
