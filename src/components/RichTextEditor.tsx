@@ -1,12 +1,32 @@
 import React from "react";
-import { Editor, EditorState, RichUtils, DraftEditorCommand } from "draft-js";
+import {
+  Editor,
+  EditorState,
+  RichUtils,
+  DraftEditorCommand,
+  AtomicBlockUtils,
+  convertToRaw,
+  convertFromRaw,
+} from "draft-js";
 import "draft-js/dist/Draft.css";
 import { linkDecorator } from "./Link";
+import { mediaBlockRenderer } from "./Media";
 
+const TEXT_EDITOR_ITEM = "draft-js-example-item";
 function RichTextEditor() {
-  const [editorState, setEditorState] = React.useState<EditorState>(
-    EditorState.createEmpty(linkDecorator)
-  );
+  const data = localStorage.getItem(TEXT_EDITOR_ITEM);
+  const initialState = data
+    ? EditorState.createWithContent(
+        convertFromRaw(JSON.parse(data)),
+        linkDecorator
+      )
+    : EditorState.createEmpty(linkDecorator);
+  const [editorState, setEditorState] =
+    React.useState<EditorState>(initialState);
+  const handleSave = () => {
+    const data = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    localStorage.setItem(TEXT_EDITOR_ITEM, data);
+  };
   const handleKeyCommand = (command: DraftEditorCommand) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
@@ -42,6 +62,25 @@ function RichTextEditor() {
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
     setEditorState(RichUtils.toggleLink(newEditorState, selection, entityKey));
   };
+  const handleInsertImage = () => {
+    const src = prompt("Please enter the URL of your picture");
+    if (!src) {
+      return;
+    }
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      "image",
+      "IMMUTABLE",
+      { src }
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(editorState, {
+      currentContent: contentStateWithEntity,
+    });
+    return setEditorState(
+      AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, " ")
+    );
+  };
 
   return (
     <div>
@@ -66,12 +105,14 @@ function RichTextEditor() {
       <button onMouseDown={(e) => handleBlockClick(e, "unordered-list-item")}>
         Unordere List
       </button>
-      <Editor
-        editorState={editorState}
-        onChange={setEditorState}
-        placeholder="test"
-        handleKeyCommand={handleKeyCommand}
-      />
+      <button
+        onMouseDown={(e) => {
+          e.preventDefault();
+          handleInsertImage();
+        }}
+      >
+        image
+      </button>
       <button
         disabled={editorState.getSelection().isCollapsed()}
         onMouseDown={(e) => {
@@ -92,6 +133,21 @@ function RichTextEditor() {
         onMouseDown={() => setEditorState(EditorState.redo(editorState))}
       >
         redo
+      </button>
+      <Editor
+        editorState={editorState}
+        onChange={setEditorState}
+        placeholder="test"
+        handleKeyCommand={handleKeyCommand}
+        blockRendererFn={mediaBlockRenderer}
+      />
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          handleSave();
+        }}
+      >
+        save
       </button>
     </div>
   );
