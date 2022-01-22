@@ -1,6 +1,6 @@
 import React from "react";
-import logo from "./public/logo512.png";
-import "./MainPage.css";
+// import logo from "./public/logo512.png";
+// import "./MainPage.css";
 import { withRouter } from "react-router-dom";
 import Button from "./Button";
 
@@ -9,7 +9,7 @@ class MainPage extends React.Component {
     return (
       <div className="MainPage">
         <header className="MainPage-header">
-          <img src={logo} className="MainPage-logo" alt="logo" />
+          {/* <img src={logo} className="MainPage-logo" alt="logo" /> */}
           MainPage
           <Button name="return" content="/" />
         </header>
@@ -17,3 +17,5 @@ class MainPage extends React.Component {
     );
   }
 }
+
+export default withRouter(MainPage);
