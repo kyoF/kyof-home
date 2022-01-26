@@ -14,15 +14,12 @@ const App: FC = () => {
         <meta charSet="utf-8" />
       </head>
       <div className="App">
-        <header className="App-header">
-          <RichTextEditor />
-        </header>
         <BrowserRouter>
           <Switch>
-            <Route path={"/PageA"}>
+            <Route exact path="/PageA" component={PageA}>
               <PageA />
             </Route>
-            <Route path={"/PageB"}>
+            <Route exact path="/PageB" component={PageB}>
               <PageB />
             </Route>
           </Switch>
