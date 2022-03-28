@@ -1,21 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
+// import homeImage from '../public/home.jpg';
+import topImage from './image/top.png';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
+        <h1>kyoF HOME</h1>
+        {/* <img src={homeImage} className="home-image" alt="home" /> */}
+        <img src={topImage} className="top-image" alt="top" />
+        <a href="https://github.com/kyoF/comic-bot">
+          <img src="https://gh-card.dev/repos/kyoF/comic-bot.svg" />
         </a>
       </header>
     </div>
