@@ -1,5 +1,5 @@
 import './App.css';
-// import homeImage from '../public/home.jpg';
+import homeImage from '../public/home.jpg';
 import topImage from './image/top.png';
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>kyoF HOME</h1>
-        {/* <img src={homeImage} className="home-image" alt="home" /> */}
+        <img src={homeImage} className="home-image" alt="home" />
         <img src={topImage} className="top-image" alt="top" />
         <a href="https://github.com/kyoF/comic-bot">
           <img src="https://gh-card.dev/repos/kyoF/comic-bot.svg" />
