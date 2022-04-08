@@ -1,5 +1,5 @@
 import './App.css';
-import homeImage from '../public/home.jpg';
+import homeImage from './image/home.png';
 import topImage from './image/top.png';
 
 function App() {
