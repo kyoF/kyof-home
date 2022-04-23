@@ -1,17 +1,23 @@
 import './App.css';
-import homeImage from './image/home.png';
-import topImage from './image/top.png';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-function App() {
+import Home from './components/home';
+import EditDocument from './components/editDocument';
+import Login from './components/login';
+import Admin from './components/admin';
+
+const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>kyoF HOME</h1>
-        <img src={homeImage} className="home-image" alt="home" />
-        <img src={topImage} className="top-image" alt="top" />
-        <a href="https://github.com/kyoF/comic-bot">
-          <img src="https://gh-card.dev/repos/kyoF/comic-bot.svg" />
-        </a>
+        <BrowserRouter>
+          <Routes>
+            <Route exact path='/' component={Home} />
+            <Route path='/editDocument' component={EditDocument} />
+            <Route path='/login' component={Login} />
+            <Route path='/admin' component={Admin} />
+          </Routes>
+        </BrowserRouter>
       </header>
     </div>
   );
